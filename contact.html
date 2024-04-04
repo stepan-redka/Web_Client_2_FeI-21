@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save your money</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/64c13699fe.js" crossorigin="anonymous"></script>
+</head>
+<body> 
+    <nav class="nav-menu">
+        <div class="logo"><a href="/images/Anime-Logo-Transparent.png"></a></div>
+        <div class="nav-block"><a href="index.html">Home</a></div>
+        <div class="nav-block"><a href="contact.html">Contact us</a></div>
+        <div class="nav-block"><a href="logo.html">Logo</a></div>
+        <div class="nav-block"><a href="test.html">Test</a></div>
+        <div class="nav-block"><a href="game.html">Game</a></div>
+        <div class="nav-block"><a href="test2.html">Test_2</a></div>
+    </nav>
+    <header class="special-header1">
+        <span class="focus-left1">
+        <div class="main-text">
+            <label for="form">Contact Us</label>
+        </div>
+        </span>
+    </header>
+    <main>
+        <span class="form-block">   
+            <form id="contactForm">
+                <div class="form-names">
+                    <input type="text" name="fname" placeholder="First Name" class="fname">
+                    <input type="text" name="lname" placeholder="Last Name" class="lname">
+                </div>
+                <div class="form-phone">
+                    <input type="tel" name="phone" placeholder="Phone Number" minlength="10" maxlength="13"
+                        class="phone">
+                </div>
+                <div class="form-select">
+                    <select name="service" class="selection-menu">
+                        <option disabled="disabled" selected="selected">Select Service:</option>
+                        <option value="0">Help with the web site</option>
+                        <option value="1">More about services</option>
+                        <option value="2">Ready to cooperate</option>
+                    </select>
+                </div>
+                <input type="submit" value="SUBMIT NOW" class="submit">
+            </form>
+        </span>
+    </main>
+    <footer>
+        <div class="footer-right">
+            <div class="nav-block1"><a href="index.html">Home</a></div>
+            <div class="nav-block1"><a href="about.html">About</a></div>
+            </div>
+        <div class="footer-left">
+            <p class="copyright">
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
+        </div>
+        <div class="footer3">
+            <i class="facebook-setting fa-brands fa-facebook-f fa-sm"></i>
+            <i class="linkedin-setting fa-brands fa-linkedin-in fa-m"></i>
+            <i class="twitter-setting fa-brands fa-twitter fa-m"></i>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contactForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // prevent form submission
+
+                // get form data
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach(function(value, key) {
+                    data[key] = value;
+                });
+
+                // save form data to localStorage
+                try {
+                    localStorage.setItem('formData', JSON.stringify(data));
+                    alert('Form data saved successfully.');
+                } catch (error) {
+                    console.error('Failed to save form data to localStorage:', error);
+                    alert('Failed to save form data to localStorage. See console for more details.');
+                }
+
+                // Optionally, you can reset the form after saving data
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>

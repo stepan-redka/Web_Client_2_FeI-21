@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mountain Trekking Survey</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/64c13699fe.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="nav-menu">
+        <div class="logo"><a href="/images/Anime-Logo-Transparent.png"></a></div>
+        <div class="nav-block"><a href="index.html">Home</a></div>
+        <div class="nav-block"><a href="contact.html">Contact us</a></div>
+        <div class="nav-block"><a href="logo.html">Logo</a></div>
+        <div class="nav-block"><a href="test.html">Test</a></div>
+        <div class="nav-block"><a href="game.html">Game</a></div>
+        <div class="nav-block"><a href="test2.html">Test_2</a></div>
+    </nav>
+    <header class="special-header1">
+        <span class="focus-left1">
+            <div class="header-text1">
+                <h2>Mountain Trekking Survey</h2>
+               </div>
+        </span>
+      </header>
+    <main>
+            <div style="margin-bottom: 60px;" class="content">
+                <form id="mountainTrekkingSurveyForm">
+                    <table class="survey">
+                        <tr>
+                            <td>
+                                <label for="age">1. Your age:</label>
+                            </td>
+                            <td>
+                                <input type="number" id="age" name="age" min="18" max="99" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="gender">2. Your gender:</label>
+                            </td>
+                            <td>
+                                <input type="radio" id="male" name="gender" value="male">
+                                <label for="male">Man</label>
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Woman</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="name">3. Your Name:</label>
+                            </td>
+                            <td>
+                                <input type="text" id="name" name="name" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="experience">4. Have you been on a mountain trekking trip before?</label>
+                            </td>
+                            <td>
+                                <select id="experience" name="experience" required>
+                                    <option value="">Choose an option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="reason">5. Why do you want to go on a mountain trekking trip?</label>
+                            </td>
+                            <td>
+                                <textarea id="reason" name="reason" rows="4" cols="50" required></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 35%;">
+                                <label for="activities">6. What types of activities are you interested in during a mountain trekking trip?<br>(Please select one or more options)</label>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="sightseeing" name="activities" value="sightseeing">
+                                <label for="sightseeing">Sightseeing</label>
+                                <input type="checkbox" id="camping" name="activities" value="camping">
+                                <label for="camping">Camping</label>
+                                <input type="checkbox" id="hiking" name="activities" value="hiking">
+                                <label for="hiking">Hiking</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="accommodation">7. What type of accommodation do you prefer during a mountain trekking trip?</label>
+                            </td>
+                            <td>
+                                <select id="accommodation" name="accommodation" required>
+                                    <option value="">Choose an option</option>
+                                    <option value="tent">Tent</option>
+                                    <option value="cabin">Cabin</option>
+                                    <option value="hostel">Hostel</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="budget">8. What budget do you plan to allocate for your mountain trekking trip?</label>
+                            </td>
+                            <td>
+                                <input type="range" id="budget" name="budget" min="1000" max="25000" step="200" required>
+                                <div id="budgetMessage"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="feedback">9. Do you have any suggestions or comments about mountain trekking trips?</label>
+                            </td>
+                            <td>
+                                <textarea id="feedback" name="feedback" rows="4" cols="50"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="email">10. Enter your email address to receive more information:</label>
+                            </td>
+                            <td>
+                                <input type="email" id="email" name="email">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Send" id="send"></td>
+                        </tr>
+                    </table>                
+                </form>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search...">
+                    <div id="searchResults"></div>
+                </div>
+            </div>
+            <script>
+                // Отримати форму опитування
+                const form = document.getElementById('mountainTrekkingSurveyForm');
+    
+                // Додати подію "submit"
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Зупинити стандартну поведінку форми
+    
+                    // Отримати дані з форми
+                    const formData = new FormData(form);
+                    const surveyData = {};
+                    for (const [key, value] of formData.entries()) {
+                        surveyData[key] = value;
+                    }
+    
+                    // Отримати поточні результати з LocalStorage
+                    const currentResults = JSON.parse(localStorage.getItem('surveyResults')) || [];
+    
+                    // Додати нові дані до поточних результатів
+                    currentResults.push(surveyData);
+    
+                    // Зберегти оновлені результати в LocalStorage
+                    localStorage.setItem('surveyResults', JSON.stringify(currentResults));
+    
+                    // Очистити форму після відправлення
+                    form.reset();
+    
+                    alert('Thank you for your answers! Your data has been successfully saved.');
+                });
+            </script>
+            <script>
+                const budgetRange = document.getElementById('budget');
+                const budgetMessage = document.getElementById('budgetMessage');
+    
+                // Додаємо подію "input" до елементу рейнджу
+                budgetRange.addEventListener('input', function() {
+                    // Оновлюємо вміст повідомлення про бюджет
+                    budgetMessage.textContent = `Your budget: ${this.value} USD`;
+                });
+    
+                // Функція для створення та відображення повідомлення
+                function showMessage(message) {
+                    // Створюємо елемент для повідомлення
+                    var messageElement = document.createElement('div');
+                    messageElement.textContent = message;
+                    messageElement.classList.add('budget-message');
+                    
+                    // Додаємо повідомлення до сторінки
+                    document.body.appendChild(messageElement);
+                    
+                    // Видаляємо повідомлення через певний час (наприклад, через 3 секунди)
+                    setTimeout(function() {
+                        messageElement.remove();
+                    }, 3000);
+                }
+            </script>
+            <script>
+                const searchInput = document.getElementById('searchInput');
+            
+                searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.trim().toLowerCase();
+                const surveyResults = JSON.parse(localStorage.getItem('surveyResults')) || [];
+                const searchResultsContainer = document.getElementById('searchResults');
+                if (searchResultsContainer) {
+                    searchResultsContainer.innerHTML = '';
+                }
+    
+                // Перевірка, чи введений текст не порожній рядок
+                if (searchTerm !== '') {
+                    const searchResults = surveyResults.filter(result => {
+                        return result.email && result.email.toLowerCase().includes(searchTerm);
+                    });
+    
+                    if (searchResults.length > 0) {
+                        const resultsList = document.createElement('ul');
+                        searchResults.forEach(result => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = JSON.stringify(result, null, 2);
+                            resultsList.appendChild(listItem);
+                        });
+                        searchResultsContainer.appendChild(resultsList);
+                    } else {
+                        const noResultsMessage = document.createElement('p');
+                        noResultsMessage.textContent = 'No results found.';
+                        searchResultsContainer.appendChild(noResultsMessage);
+                    }
+                }
+            });
+            </script>
+        </div>
+    </main>
+   
+    <footer>
+        <div class="footer-right">
+            <div class="nav-block1"><a href="index.html">Home</a></div>
+			<div class="nav-block1"><a href="about.html">About</a></div>
+            </div>
+        <div class="footer-left">
+            <p class="copyright">
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
+        </div>
+        <div class="footer3">
+            <i class="facebook-setting fa-brands fa-facebook-f fa-sm"></i>
+            <i class="linkedin-setting fa-brands fa-linkedin-in fa-m"></i>
+            <i class="twitter-setting fa-brands fa-twitter fa-m"></i>
+        </div>
+	</footer>
+</body>
+</html>

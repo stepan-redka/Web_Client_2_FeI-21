@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save your money</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/64c13699fe.js" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <nav class="nav-menu">
+      <div class="logo"><a href="/images/Anime-Logo-Transparent.png"></a></div>
+      <div class="nav-block"><a href="index.html">Home</a></div>
+      <div class="nav-block"><a href="contact.html">Contact us</a></div>
+      <div class="nav-block"><a href="logo.html">Logo</a></div>
+      <div class="nav-block"><a href="test.html">Test</a></div>
+      <div class="nav-block"><a href="game.html">Game</a></div>
+      <div class="nav-block"><a href="test2.html">Test_2</a></div>
+    </nav>
+
+    <header class="header">
+        <!-- header content -->
+    </header>
+
+    <main>
+        <!-- main content -->
+        <canvas width="400" height="500" id="game"></canvas>
+        <div id="score">Score: 0</div>
+        <button onclick="exitGame()">Exit</button>
+        <div id="bricks">Bricks: 0</div> <!-- Відображення кількості збитих цеглинок -->
+
+        <script>
+          
+          
+          const canvas = document.getElementById('game');
+          const context = canvas.getContext('2d');
+          
+             // Лічильники
+             let ballsLaunched = parseInt(localStorage.getItem('ballsLaunched')) || 0;
+             let bricksDestroyed = parseInt(localStorage.getItem('bricksDestroyed')) || 0;
+   
+             // Посилання на елементи для відображення кількості спроб (запущених м'ячів) та кількості збитих цеглинок
+             const scoreDisplay = document.getElementById('score');
+             const bricksDisplay = document.getElementById('bricks');
+   
+             // Функція для запуску м'яча
+              function launchBall() {
+                ballsLaunched++;
+                bricksDestroyed = 0; // анулюємо лічильник збитих цеглин при початку нової гри
+                updateScoreDisplay();
+                // Додаткова логіка запуску м'яча...
+              }
+   
+             // Функція для оновлення відображення кількості спроб (запущених м'ячів)
+             function updateScoreDisplay() {
+               scoreDisplay.textContent = 'Score: ' + ballsLaunched;
+               localStorage.setItem('ballsLaunched', ballsLaunched); // Зберігаємо дані в localStorage
+             }
+   
+             // Функція для оновлення відображення кількості збитих цеглинок
+             function updateBricksDisplay() {
+               bricksDisplay.textContent = 'Bricks: ' + bricksDestroyed;
+               localStorage.setItem('bricksDestroyed', bricksDestroyed); // Зберігаємо дані в localStorage
+             }
+   
+            // Функція для виходу з гри
+            function exitGame() {
+              // Занулення лічильника спроб (запущених м'ячів)
+              ballsLaunched = 0;
+              // Оновлення відображення кількості спроб
+              updateScoreDisplay();
+              // Оновлення відображення кількості збитих цеглинок
+              updateBricksDisplay();
+              // Збереження даних в localStorage
+              localStorage.setItem('ballsLaunched', ballsLaunched);
+              localStorage.setItem('bricksDestroyed', bricksDestroyed);
+              
+              // Повідомлення про успішне збереження даних
+              alert('Дані успішно збережено у localStorage!');
+          }
+          
+
+
+          
+          // each row is 14 bricks long. the level consists of 6 blank rows then 8 rows
+          // of 4 colors: red, orange, green, and yellow
+          const level1 = [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            ['R','R','R','R','R','R','R','R','R','R','R','R','R','R'],
+            ['R','R','R','R','R','R','R','R','R','R','R','R','R','R'],
+            ['O','O','O','O','O','O','O','O','O','O','O','O','O','O'],
+            ['O','O','O','O','O','O','O','O','O','O','O','O','O','O'],
+            ['G','G','G','G','G','G','G','G','G','G','G','G','G','G'],
+            ['G','G','G','G','G','G','G','G','G','G','G','G','G','G'],
+            ['Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y'],
+            ['Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y']
+          ];
+          
+          // create a mapping between color short code (R, O, G, Y) and color name
+          const colorMap = {
+            'R': 'red',
+            'O': 'orange',
+            'G': 'green',
+            'Y': 'yellow'
+          };
+          
+          // use a 2px gap between each brick
+          const brickGap = 2;
+          const brickWidth = 25;
+          const brickHeight = 12;
+          
+          // the wall width takes up the remaining space of the canvas width. with 14 bricks
+          // and 13 2px gaps between them, thats: 400 - (14 * 25 + 2 * 13) = 24px. so each
+          // wall will be 12px
+          const wallSize = 12;
+          const bricks = [];
+          
+          // create the level by looping over each row and column in the level1 array
+          // and creating an object with the bricks position (x, y) and color
+          for (let row = 0; row < level1.length; row++) {
+            for (let col = 0; col < level1[row].length; col++) {
+              const colorCode = level1[row][col];
+          
+              bricks.push({
+                x: wallSize + (brickWidth + brickGap) * col,
+                y: wallSize + (brickHeight + brickGap) * row,
+                color: colorMap[colorCode],
+                width: brickWidth,
+                height: brickHeight
+              });
+            }
+          }
+          
+          const paddle = {
+            // place the paddle horizontally in the middle of the screen
+            x: canvas.width / 2 - brickWidth / 2,
+            y: 440,
+            width: 100,
+            height: brickHeight,
+          
+            // paddle x velocity
+            dx: 0
+          };
+          
+          const ball = {
+            x: 130,
+            y: 260,
+            width: 5,
+            height: 5,
+          
+            // how fast the ball should go in either the x or y direction
+            speed: 2,
+            color: 'purple', // Додано властивість color зі значенням 'blue'
+
+            // ball velocity
+            dx: 0,
+            dy: 0
+          };
+          
+          // check for collision between two objects using axis-aligned bounding box (AABB)
+          // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+          function collides(obj1, obj2) {
+            return obj1.x < obj2.x + obj2.width &&
+                   obj1.x + obj1.width > obj2.x &&
+                   obj1.y < obj2.y + obj2.height &&
+                   obj1.y + obj1.height > obj2.y;
+          }
+          
+          // game loop
+          function loop() {
+            requestAnimationFrame(loop);
+            context.clearRect(0,0,canvas.width,canvas.height);
+          
+            // move paddle by it's velocity
+            paddle.x += paddle.dx;
+          
+            // prevent paddle from going through walls
+            if (paddle.x < wallSize) {
+              paddle.x = wallSize
+            }
+            else if (paddle.x + paddle.width > canvas.width - wallSize) {
+              paddle.x = canvas.width - paddle.width - wallSize;
+            }
+
+          
+            // move ball by it's velocity
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+          
+            // prevent ball from going through walls by changing its velocity
+            // left & right walls
+            if (ball.x < wallSize) {
+              ball.x = wallSize;
+              ball.dx *= -1;
+            }
+            else if (ball.x + ball.width > canvas.width - wallSize) {
+              ball.x = canvas.width - wallSize - ball.width;
+              ball.dx *= -1;
+            }
+            // top wall
+            if (ball.y < wallSize) {
+              ball.y = wallSize;
+              ball.dy *= -1;
+            }
+          
+            // reset ball if it goes below the screen
+            if (ball.y > canvas.height) {
+              ball.x = 130;
+              ball.y = 260;
+              ball.dx = 0;
+              ball.dy = 0;
+            }
+          
+            // check to see if ball collides with paddle. if they do change y velocity
+            if (collides(ball, paddle)) {
+              ball.dy *= -1;
+          
+              // move ball above the paddle otherwise the collision will happen again
+              // in the next frame
+              ball.y = paddle.y - ball.height;
+            }
+          
+            // check to see if ball collides with a brick. if it does, remove the brick
+            // and change the ball velocity based on the side the brick was hit on
+            for (let i = 0; i < bricks.length; i++) {
+              const brick = bricks[i];
+            
+              if (collides(ball, brick)) {
+                bricks.splice(i, 1);
+                bricksDestroyed++; // Збільшуємо лічильник збитих цеглин
+                updateBricksDisplay(); // Оновлюємо відображення кількості збитих цеглин
+          
+                // ball is above or below the brick, change y velocity
+                // account for the balls speed since it will be inside the brick when it
+                // collides
+                if (ball.y + ball.height - ball.speed <= brick.y ||
+                    ball.y >= brick.y + brick.height - ball.speed) {
+                  ball.dy *= -1;
+                }
+                // ball is on either side of the brick, change x velocity
+                else {
+                  ball.dx *= -1;
+                }
+          
+                break;
+              }
+            }
+          
+            // draw walls
+            context.fillStyle = 'lightgrey';
+            context.fillRect(0, 0, canvas.width, wallSize);
+            context.fillRect(0, 0, wallSize, canvas.height);
+            context.fillRect(canvas.width - wallSize, 0, wallSize, canvas.height);
+          
+            // draw ball if it's moving
+            if (ball.dx || ball.dy) {
+              context.fillRect(ball.x, ball.y, ball.width, ball.height);
+            }
+          
+            // draw bricks
+            bricks.forEach(function(brick) {
+              context.fillStyle = brick.color;
+              context.fillRect(brick.x, brick.y, brick.width, brick.height);
+            });
+          
+            // draw paddle
+            context.fillStyle = 'cyan';
+            context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+          }
+          
+          // listen to keyboard events to move the paddle
+          document.addEventListener('keydown', function(e) {
+            // left arrow key
+            if (e.which === 37) {
+              paddle.dx = -3;
+            }
+            // right arrow key
+            else if (e.which === 39) {
+              paddle.dx = 3;
+            }
+          
+            // space key
+            // if they ball is not moving, we can launch the ball using the space key. ball
+            // will move towards the bottom right to start
+            if (ball.dx === 0 && ball.dy === 0 && e.which === 32) {
+              ball.dx = ball.speed;
+              ball.dy = ball.speed;
+            }
+          });
+          
+          // listen to keyboard events to stop the paddle if key is released
+          document.addEventListener('keyup', function(e) {
+            if (e.which === 37 || e.which === 39) {
+              paddle.dx = 0;
+            }
+          });
+          
+          // start the game
+          requestAnimationFrame(loop);
+
+         // Слухач подій на клавіатуру для натискання на пробіл (код 32)
+         document.addEventListener('keydown', function(event) {
+          if (event.keyCode === 32) { // 32 - код клавіші "space"
+            launchBall();
+          }
+        });
+
+
+// Обробник події для кнопки "Exit"
+document.getElementById('exitButton').addEventListener('click', exitGame);
+
+        // Приклад виклику launchBall() для запуску м'яча
+        // launchBall();
+
+        // Слухач події перед перезавантаженням або закриттям сторінки
+        window.addEventListener('beforeunload', function(event) {
+          // Викликаємо функцію exitGame(), щоб занулити результати гри та зберегти їх у localStorage
+          exitGame();
+        });
+      </script>
+    </main>
+
+    <footer class="footer2">
+        <!-- footer content -->
+        <div class="footer-right">
+            <div class="nav-block1"><a href="index.html">Home</a></div>
+            <div class="nav-block1"><a href="about.html">About</a></div>
+        </div>
+        <div class="footer-left">
+            <p class="copyright">
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
+        </div>
+        <div class="footer3">
+            <i class="facebook-setting fa-brands fa-facebook-f fa-sm"></i>
+            <i class="linkedin-setting fa-brands fa-linkedin-in fa-m"></i>
+            <i class="twitter-setting fa-brands fa-twitter fa-m"></i>
+        </div>
+    </footer>
+</body>
+</html>
